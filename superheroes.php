@@ -62,11 +62,42 @@ $superheroes = [
       "biography" => "Notably powerful, Wanda Maximoff has fought both against and with the Avengers, attempting to hone her abilities and do what she believes is right to help the world.",
   ], 
 ];
+$searchTerm = isset($_GET['search']) ? strtolower($_GET['search']) : '';
+$heroFound = false;
+echo "<ul class='matches'>"; // Start the list
+
+if (!empty($searchTerm)) {
+    foreach ($superheroes as $superhero) {
+        if (strpos(strtolower($superhero['name']), $searchTerm) !== false || 
+            strpos(strtolower($superhero['alias']), $searchTerm) !== false) {
+            
+            echo "<li class='card'>";
+            echo "<h3>" . htmlspecialchars($superhero['alias']) . "</h3>";
+            echo "<h4> A.K.A " . htmlspecialchars($superhero['name']) . "</h4>";
+            echo "<p>" . htmlspecialchars($superhero['biography']) . "</p>";
+            echo "</li>";
+            $heroesFound = true;
+        }
+    }
+
+    // If no matching superheroes are found
+    if (!$heroesFound) {
+        echo "<li class='not-found'>Superhero not found</li>";
+    }
+}  else {
+    // If no search term is provided, display the full list of superheroes
+    echo "<ul class='full-results'>";
+    foreach ($superheroes as $superhero) {
+        echo "<li>" . htmlspecialchars($superhero['alias']) . "</li>";
+    }
+    echo "</ul>";
+}
+echo "</ul>"; 
 
 ?>
 
 <ul>
-<?php foreach ($superheroes as $superhero): ?>
+<?php foreach ($filteredSuperheroes as $superhero): ?>
   <li><?= $superhero['alias']; ?></li>
 <?php endforeach; ?>
-</ul>
+</ul> 
